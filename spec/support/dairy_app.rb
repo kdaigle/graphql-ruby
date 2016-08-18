@@ -312,11 +312,12 @@ SubscriptionType = GraphQL::ObjectType.define do
   end
 end
 
-DummySchema = GraphQL::Schema.new(
-  query: DairyAppQueryType,
-  mutation: DairyAppMutationType,
-  subscription: SubscriptionType,
-  max_depth: 5,
-  types: [HoneyType],
-)
-DummySchema.rescue_from(NoSuchDairyError) { |err| err.message  }
+DummySchema = GraphQL::Schema.define do
+  query DairyAppQueryType
+  mutation DairyAppMutationType
+  subscription SubscriptionType
+  max_depth 5
+  orphan_types [HoneyType]
+
+  rescue_from(NoSuchDairyError) { |err| err.message  }
+end
